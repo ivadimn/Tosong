@@ -2,8 +2,7 @@ from aiogram import executor
 from loader import dp, bot
 from aiogram.types import BotCommand
 from config_data.config import COMMANDS
-import handlers.handlers
-from youtube import get_video, get_audio
+import handlers
 
 url = "https://www.youtube.com/watch?v=9BMwcO6_hyA"
 VIDEO_DIR = "videos"
