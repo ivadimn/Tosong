@@ -1,4 +1,5 @@
 from aiogram import types
+from aiogram.types import ReplyKeyboardRemove
 from loader import dp, bot
 from config_data.resources import msgs
 from config_data.config import AUDIO_DIR
@@ -20,8 +21,16 @@ async def chelp(message: types.Message):
     await bot.send_message(message.chat.id, msg)
 
 
-@dp.message_handler(content_types=["text",])
+@dp.message_handler(commands=["audio"])
 async def audio(message: types.Message):
+    locale = message.from_user.language_code.lower()
+    msg = msgs[locale].AUDIO_MODE
+    await bot.send_message(message.chat.id, msg, reply_markup=ReplyKeyboardRemove())
+
+
+
+@dp.message_handler(content_types=["text",])
+async def audio_url(message: types.Message):
     url = message.text
     uid = message.chat.id
     file = get_audio(url, AUDIO_DIR, uid)
