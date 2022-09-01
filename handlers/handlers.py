@@ -1,10 +1,12 @@
 from aiogram import types
 from aiogram.types import ReplyKeyboardRemove
+from aiogram.dispatcher import FSMContext
 from loader import dp, bot
 from config_data.resources import msgs
 from config_data.config import AUDIO_DIR
 from utils.youtube import get_audio
 from keyboards import kb_commands
+from states.bot_states import BotState
 
 
 @dp.message_handler(commands=["start"])
@@ -25,8 +27,8 @@ async def chelp(message: types.Message):
 async def audio(message: types.Message):
     locale = message.from_user.language_code.lower()
     msg = msgs[locale].AUDIO_MODE
+    await BotState.url_audio.set()
     await bot.send_message(message.chat.id, msg, reply_markup=ReplyKeyboardRemove())
-
 
 
 @dp.message_handler(content_types=["text",])
