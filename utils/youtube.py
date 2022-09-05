@@ -1,3 +1,4 @@
+from urllib.request import urlopen
 from pytube import YouTube
 import ffmpeg
 from moviepy.editor import *
@@ -35,14 +36,11 @@ def get_audio(link: str, path: str, uid: int) -> str:
     abs_path = os.path.join(os.path.abspath(os.path.curdir), path)
     if not os.path.exists(abs_path):
         os.mkdir(abs_path)
-    try:
-        yt = YouTube(link, on_complete_callback=on_complete, on_progress_callback=on_progress)
-        audio_streams = yt.streams.get_audio_only()
-        print("Loading {0}...".format(audio_streams.title))
-        audio_streams.download(abs_path, "audio-{0}.mp4".format(uid))
-        return save_audio(abs_path, uid, audio_streams.default_filename)
-    except Exception as ex:
-        print("Error loading: {0}".format(ex))
+    yt = YouTube(link, on_complete_callback=on_complete, on_progress_callback=on_progress)
+    audio_streams = yt.streams.get_audio_only()
+    print("Loading {0}...".format(audio_streams.title))
+    audio_streams.download(abs_path, "audio-{0}.mp4".format(uid))
+    return save_audio(abs_path, uid, audio_streams.default_filename)
 
 
 def combine(path: str, uid: int, file_name: str) -> None:
@@ -60,3 +58,11 @@ def save_audio(path: str, uid: int, file_name: str) -> str:
     print("{0} was saved".format(file_name))
     os.remove(os.path.join(path, "audio-{0}.mp4".format(uid)))
     return full_name
+
+
+def is_url_valid(url: str) -> bool:
+    try:
+        urlopen(url)
+        return True
+    except Exception:
+        return False
