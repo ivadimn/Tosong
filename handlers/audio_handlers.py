@@ -27,8 +27,9 @@ async def audio_url(message: types.Message, state: FSMContext):
         if not is_url_valid(url):
             raise BadUrlError(msgs[locale].BAD_URL.format(url))
         file = get_audio(url, AUDIO_DIR, uid)
+
         with open(file, "rb") as a:
-            await bot.send_audio(message.chat.id, a)
+            await bot.send_audio(message.chat.id, a, reply_markup=kb_commands)
         await state.reset_data()
     except Exception as ex:
         print(str(ex))
