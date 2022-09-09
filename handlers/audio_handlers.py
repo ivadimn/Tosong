@@ -1,3 +1,5 @@
+from typing import Any
+
 from aiogram import types
 from aiogram.types import ReplyKeyboardRemove
 from aiogram.dispatcher import FSMContext
@@ -8,6 +10,7 @@ from utils.youtube import get_audio, is_url_valid
 from keyboards import kb_commands, kb_yes_no_en, kb_yes_no_ru
 from states.bot_states import BotState
 from errors.errors import BadUrlError
+from utils.media import Audio
 
 
 @dp.message_handler(commands=["audio"])
@@ -26,8 +29,12 @@ async def audio_url(message: types.Message, state: FSMContext):
     try:
         if not is_url_valid(url):
             raise BadUrlError(msgs[locale].BAD_URL.format(url))
-        file = get_audio(url, AUDIO_DIR, uid)
-
+        edit_msg = await bot.send_message(message.chat.id, "Идёт загрука!!")
+        #file = get_audio(url, AUDIO_DIR, uid)
+        mp3 = Audio(url, edit_msg, on_progress)
+        file = mp3.get(AUDIO_DIR, uid)
+        await bot.delete_message(edit_msg.chat.id, edit_msg.message_id)
+        await bot.send_message("Загрузка завершена", edit_msg.chat.id, edit_msg.message_id)
         with open(file, "rb") as a:
             await bot.send_audio(message.chat.id, a, reply_markup=kb_commands)
         await state.reset_data()
@@ -58,3 +65,8 @@ async def send_error_message(message: types.Message, error_msg: str) -> None:
     else:
         keyb = kb_yes_no_en
     await bot.send_message(message.chat.id, msg, reply_markup=keyb)
+
+
+async def on_progress(message: types.Message, msg: str) -> None:
+    print("on progress called")
+    await message.bot.edit_message_text(msg, chat_id = message.chat.id, message_id = message.message_id)
