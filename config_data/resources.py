@@ -14,6 +14,8 @@ class MsgsRu:
     REPEAT = "Повторить попытку?(да/нет)"
     BAD_URL = "Не корректная ссылка...{0}"
     SELECT_COMMAND = "Выберите команду..."
+    PROGRESS = "Идёт загрузка..."
+    COMPLETE = "Загрузка завершена, ожидаем файл..."
 
 
 class MsgsEn:
@@ -26,6 +28,8 @@ class MsgsEn:
     REPEAT = "To retry?(yes/no)"
     BAD_URL = "Bad URL address...{0}"
     SELECT_COMMAND = "Select command..."
+    PROGRESS = "Downloading in progress..."
+    COMPLETE = "Download completed, waiting for the file..."
 
 
 msgs = {"ru": MsgsRu, "en": MsgsEn}

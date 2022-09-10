@@ -8,6 +8,7 @@ else:
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 AUDIO_DIR = "audios"
+VIDEO_DIR = "videos"
 COMMANDS = (
     ('start', "Start bot"),
     ('high', "Load high resolution video from YouTube"),

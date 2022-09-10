@@ -1,5 +1,8 @@
 from typing import Any
 
+from urllib.error import URLError   #повторить без запроса
+from aiogram.utils.exceptions import NetworkError #повторить без запроса
+
 from aiogram import types
 from aiogram.types import ReplyKeyboardRemove
 from aiogram.dispatcher import FSMContext
@@ -13,7 +16,7 @@ from errors.errors import BadUrlError
 from utils.media import Audio
 
 
-@dp.message_handler(commands=["audio"])
+@dp.message_handler(commands=["audio"], state="*")
 async def audio(message: types.Message):
     locale = message.from_user.language_code.lower()
     msg = msgs[locale].AUDIO_MODE
@@ -29,16 +32,18 @@ async def audio_url(message: types.Message, state: FSMContext):
     try:
         if not is_url_valid(url):
             raise BadUrlError(msgs[locale].BAD_URL.format(url))
-        edit_msg = await bot.send_message(message.chat.id, "Идёт загрука!!")
+        edit_msg = await bot.send_message(message.chat.id, msgs[locale].PROGRESS)
         #file = get_audio(url, AUDIO_DIR, uid)
-        mp3 = Audio(url, edit_msg, on_progress)
-        file = mp3.get(AUDIO_DIR, uid)
+        mp3 = Audio(url, AUDIO_DIR, uid)
+        file = mp3.get()
         await bot.delete_message(edit_msg.chat.id, edit_msg.message_id)
-        await bot.send_message("Загрузка завершена", edit_msg.chat.id, edit_msg.message_id)
-        with open(file, "rb") as a:
-            await bot.send_audio(message.chat.id, a, reply_markup=kb_commands)
+        await bot.send_message(message.chat.id, msgs[locale].COMPLETE)
+        await send_result(message, file)
         await state.reset_data()
+    except BadUrlError as ex:
+        await send_error_message(message, str(ex))
     except Exception as ex:
+        print(type(ex))
         print(str(ex))
         await send_error_message(message, str(ex))
 
@@ -56,6 +61,18 @@ async def repeat(message: types.Message, state: FSMContext):
         await bot.send_message(message.chat.id, msgs[locale].SELECT_COMMAND, reply_markup=kb_commands)
 
 
+async def load_audio(message: types.Message, url: str, uid: int) -> None:
+
+    # file = get_audio(url, AUDIO_DIR, uid)
+    mp3 = Audio(url, AUDIO_DIR, uid)
+    file = mp3.get()
+    await bot.delete_message(edit_msg.chat.id, edit_msg.message_id)
+    await bot.send_message(message.chat.id, msgs[locale].COMPLETE)
+    await send_result(message, file)
+    await state.reset_data()
+
+
+
 async def send_error_message(message: types.Message, error_msg: str) -> None:
     locale = locale = message.from_user.language_code.lower()
     msg = "{0}\n{1}".format(error_msg, msgs[locale].REPEAT)
@@ -67,6 +84,12 @@ async def send_error_message(message: types.Message, error_msg: str) -> None:
     await bot.send_message(message.chat.id, msg, reply_markup=keyb)
 
 
-async def on_progress(message: types.Message, msg: str) -> None:
-    print("on progress called")
-    await message.bot.edit_message_text(msg, chat_id = message.chat.id, message_id = message.message_id)
+async def send_result(message: types.Message, file: str) -> None:
+    step = 0
+    while step < 10:
+        try:
+            with open(file, "rb") as a:
+                await bot.send_audio(message.chat.id, a, reply_markup=kb_commands)
+            break
+        except Exception:
+            continue
