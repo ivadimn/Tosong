@@ -4,7 +4,7 @@ from aiogram.dispatcher import FSMContext
 from loader import dp, bot
 from config_data.resources import msgs
 from config_data.config import AUDIO_DIR
-from utils.youtube import get_audio, is_url_valid
+from utils.youtube import get_audio
 from keyboards import kb_commands
 from states.bot_states import BotState
 from errors.errors import BadUrlError

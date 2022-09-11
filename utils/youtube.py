@@ -1,4 +1,3 @@
-from urllib.request import urlopen
 from pytube import YouTube
 import ffmpeg
 from moviepy.editor import *
@@ -60,9 +59,4 @@ def save_audio(path: str, uid: int, file_name: str) -> str:
     return full_name
 
 
-def is_url_valid(url: str) -> bool:
-    try:
-        urlopen(url)
-        return True
-    except Exception:
-        return False
+

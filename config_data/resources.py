@@ -12,10 +12,11 @@ class MsgsRu:
     AUDIO_MODE = "Для получения аудио дорожки из видео, введите URL видео на YouTube..."
     ERROR = "Произошла ошибка: {0}"
     REPEAT = "Повторить попытку?(да/нет)"
-    BAD_URL = "Не корректная ссылка...{0}"
+    BAD_URL = "Введена не корректная ссылка...{0}"
     SELECT_COMMAND = "Выберите команду..."
     PROGRESS = "Идёт загрузка..."
     COMPLETE = "Загрузка завершена, ожидаем файл..."
+    STOP_ERROR = "При загрузке файла произошла ошибка, повторите попытку позже."
 
 
 class MsgsEn:
@@ -26,10 +27,11 @@ class MsgsEn:
     AUDIO_MODE = "To get the audio track from a video, enter the YouTube video URL..."
     ERROR = "An error has occurred: {0}"
     REPEAT = "To retry?(yes/no)"
-    BAD_URL = "Bad URL address...{0}"
+    BAD_URL = "Bad URL address was entered...{0}"
     SELECT_COMMAND = "Select command..."
     PROGRESS = "Downloading in progress..."
     COMPLETE = "Download completed, waiting for the file..."
+    STOP_ERROR = "An error occurred while downloading the file, please try again later"
 
 
 msgs = {"ru": MsgsRu, "en": MsgsEn}
