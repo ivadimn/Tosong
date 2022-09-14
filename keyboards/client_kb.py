@@ -17,3 +17,4 @@ no_btn_ru = KeyboardButton("Нет")
 kb_yes_no_ru = ReplyKeyboardMarkup(resize_keyboard=True)
 kb_yes_no_ru.row(yes_btn_ru, no_btn_ru)
 
+kb_yes_no = {"ru": kb_yes_no_ru, "en": kb_yes_no_en}

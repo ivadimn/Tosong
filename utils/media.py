@@ -47,5 +47,5 @@ class Audio(Media):
 
 class Video(Media):
 
-    def __init__(self, url: str, message: Message, callback: Optional[Callable]) -> None:
-        super().__init__(url, message, callback)
+    def __init__(self, url: str) -> None:
+        super().__init__(url)
