@@ -1,3 +1,4 @@
+import os
 from aiogram import types
 from aiogram.types import ReplyKeyboardRemove
 from aiogram.dispatcher import FSMContext
@@ -24,14 +25,17 @@ async def audio_url(message: types.Message):
     print(message.audio.file_id)
 
 
-
 @dp.message_handler(content_types=["text",], state=BotState.url_audio)
 async def audio_url(message: types.Message, state: FSMContext):
     url = message.text
+    await state.update_data(url=url, file="")
     if not is_url_valid(url):
-        await url_error_message(message, url)
+        data = await state.get_data()
+        locale = data["locale"]
+        msg = "{0}\n{1}".format(msgs[locale].BAD_URL.format(url), msgs[locale].REPEAT_INPUT)
+        await BotState.repeat_input.set()
+        await bot.send_message(message.chat.id, msg, reply_markup=kb_yes_no.get(locale))
     else:
-        await state.update_data(url=url, file="")
         await get(state)
 
 
@@ -62,25 +66,8 @@ async def repeat_get(message: types.Message, state: FSMContext):
         await bot.send_message(message.chat.id, msgs[locale].SELECT_COMMAND, reply_markup=kb_commands)
 
 
-async def url_error_message(message: types.Message, url: str) -> None:
-    locale = message.from_user.language_code.lower()
-    msg = "{0}\n{1}".format(msgs[locale].BAD_URL.format(url), msgs[locale].REPEAT_INPUT)
-    await BotState.repeat_input.set()
-    await bot.send_message(message.chat.id, msg, reply_markup=kb_yes_no.get(locale))
-
-
-async def send_error_message(state: FSMContext) -> None:
-    data = await state.get_data()
-    locale = data.get("locale")
-    chat_id = data.get("id")
-    msg = "{0}\n{1}".format(msgs[locale].STOP_ERROR, msgs[locale].REPEAT)
-    await BotState.repeat_get.set()
-    await bot.send_message(chat_id, msg, reply_markup=kb_yes_no.get(locale))
-
-
 async def get(state: FSMContext) -> None:
     data = await state.get_data()
-
     locale = data.get("locale")
     file = data.get("file")
     chat_id = data.get("id")
@@ -90,17 +77,25 @@ async def get(state: FSMContext) -> None:
     try:
         if file == "":
             file = mp3.get()
+            await state.update_data(file = file)
         await bot.delete_message(chat_id, edit_msg.message_id)
         await bot.send_message(chat_id, msgs[locale].COMPLETE)
-        await send_result(chat_id, file)
+        await send_result(state)
         await state.reset_data()
     except Exception as ex:
         print(str(ex))
         await bot.delete_message(chat_id, edit_msg.message_id)
         BotState.repeat_get.set()
-        await send_error_message(state)
+        msg = "{0}\n{1}".format(msgs[locale].STOP_ERROR, msgs[locale].REPEAT)
+        await bot.send_message(chat_id, msg, reply_markup=kb_yes_no.get(locale))
 
 
-async def send_result(chat_id: types.Message, file: str) -> None:
-    with open(file, "rb") as a:
-        await bot.send_audio(chat_id, a, reply_markup=kb_commands)
+async def send_result(state: FSMContext) -> None:
+    data = await state.get_data()
+    size = os.path.getsize(data["file"])
+    if size < 51200000:
+        with open(data["file"], "rb") as a:
+            await bot.send_audio(data["id"], a, reply_markup=kb_commands)
+    else:
+        msg = msgs[data["locale"]].LARGE_FILE_ERROR
+        await bot.send_message(data["id"], msg, reply_markup=kb_commands)

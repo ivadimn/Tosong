@@ -57,6 +57,3 @@ def save_audio(path: str, uid: int, file_name: str) -> str:
     print("{0} was saved".format(file_name))
     os.remove(os.path.join(path, "audio-{0}.mp4".format(uid)))
     return full_name
-
-
-

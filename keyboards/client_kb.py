@@ -1,11 +1,11 @@
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 
-high_btn = KeyboardButton("/high")
 audio_btn = KeyboardButton("/audio")
+image_btn = KeyboardButton("/image")
 help_btn = KeyboardButton("/help")
 
 kb_commands = ReplyKeyboardMarkup(resize_keyboard=True)
-kb_commands.row(high_btn, audio_btn, help_btn)
+kb_commands.row(image_btn, audio_btn, help_btn)
 
 yes_btn_en = KeyboardButton("Yes")
 no_btn_en = KeyboardButton("No")

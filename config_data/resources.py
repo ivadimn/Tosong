@@ -1,13 +1,7 @@
-commands = {"/high"
-            "/help": "Помощь;",
-            "/values": "Список всех возможных валют;",
-            "<имя валюты> <в какую валюту перевести> <количество переводимой валюты>": "запрос суммы."}
-
-
 class MsgsRu:
     WELCOME = "Привет {0}, добро пожаловать в бот, получающий звуковую дорожку из видео YouTube"
-    COMMANDS = {"/high": "Скачать видео в высоком разрешении",
-                "/audio": "Скачать аудио дорожку видео",
+    COMMANDS = {"/audio": "Скачать аудио дорожку видео",
+                "/image": "Обработка изображений",
                 "/help": "Показать подсказку" }
     AUDIO_MODE = "Для получения аудио дорожки из видео, введите URL видео на YouTube..."
     ERROR = "Произошла ошибка: {0}"
@@ -19,12 +13,14 @@ class MsgsRu:
     COMPLETE = "Загрузка завершена, ожидаем файл..."
     STOP_ERROR = "При загрузке файла произошла ошибка."
     ANOTHER_ATTEMPT = "Ещё одна попытка."
+    LARGE_FILE_ERROR = "Загруженный файл больше 50 мегабайт\nК сожалению, бот не может переслать файл такого размера."
+    IMAGE_STUB = "Обработка изображений пока не реализована."
 
 
 class MsgsEn:
     WELCOME = "Hello {0}, welcome to get audio from YouTube video bot"
-    COMMANDS = {"/high": "Dwonload video in highest resolution",
-                "/audio": "Dwonload audio track from video",
+    COMMANDS = {"/audio": "Dwonload audio track from video",
+                "/image": "Image processing",
                 "/help": "Show help"}
     AUDIO_MODE = "To get the audio track from a video, enter the YouTube video URL..."
     ERROR = "An error has occurred: {0}"
@@ -36,6 +32,8 @@ class MsgsEn:
     COMPLETE = "Download completed, waiting for the file..."
     STOP_ERROR = "An error occurred while downloading the file"
     ANOTHER_ATTEMPT = "Another attempt."
+    LARGE_FILE_ERROR = "The downloaded file is over 50 megabytes\nUnfortunately, the bot cannot send a file of this size."
+    IMAGE_STUB = "Image processing not implemented yet."
 
 
 msgs = {"ru": MsgsRu, "en": MsgsEn}
