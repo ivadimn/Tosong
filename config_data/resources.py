@@ -4,6 +4,7 @@ class MsgsRu:
                 "/image": "Обработка изображений",
                 "/help": "Показать подсказку" }
     AUDIO_MODE = "Для получения аудио дорожки из видео, введите URL видео на YouTube..."
+    VIDEO_MODE = "Для загрузки видео, введите URL видео на YouTube..."
     ERROR = "Произошла ошибка: {0}"
     REPEAT = "Повторить попытку?(да/нет)"
     REPEAT_INPUT = "Повторить ввод URL?(да/нет)"
@@ -23,6 +24,7 @@ class MsgsEn:
                 "/image": "Image processing",
                 "/help": "Show help"}
     AUDIO_MODE = "To get the audio track from a video, enter the YouTube video URL..."
+    VIDEO_MODE = "To get the video, enter the YouTube video URL..."
     ERROR = "An error has occurred: {0}"
     REPEAT = "To retry?(yes/no)"
     REPEAT_INPUT = "Do you will retry input URL?(yes/no)"

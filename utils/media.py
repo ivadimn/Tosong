@@ -5,6 +5,7 @@ from aiogram.types import Message
 from abc import ABC, abstractmethod
 from utils.functions import on_progress, on_complete, get_abs_path
 import os
+import string
 
 
 class Media(ABC):
@@ -52,15 +53,11 @@ class Video(Media):
 
     def get(self) -> str:
         yt = YouTube(self.url, on_complete_callback=on_complete, on_progress_callback=on_progress)
-        yt.t
         print("Loading {0}...".format(yt.title))
         filters = yt.streams.filter(progressive=True, file_extension='mp4')
+        filename = yt.title.translate(str.maketrans("", "", string.punctuation))
+        filters.get_highest_resolution().download(self.abs_path, filename=filename)
+        return os.path.join(self.abs_path, filename)
 
-        filters.get_highest_resolution().download(self.abs_path)
-        print('Video Downloaded Successfully')
-
-
-        audio_streams = yt.streams.get_audio_only()
-
-        audio_streams.download(self.abs_path, "audio-{0}.mp4".format(self.uid))
-        return self.save(audio_streams.default_filename)
+    def save(self, file_name: str) -> str:
+        pass

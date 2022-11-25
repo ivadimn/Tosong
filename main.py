@@ -8,6 +8,7 @@ url = "https://www.youtube.com/watch?v=9BMwcO6_hyA"
 VIDEO_DIR = "videos"
 AUDIO_DIR = "audios"
 
+
 async def on_startup(_):
     await bot.set_my_commands(
         [BotCommand(*command) for command in COMMANDS]
