@@ -12,6 +12,7 @@ VIDEO_DIR = "videos"
 COMMANDS = (
     ('start', "Start bot"),
     ('audio', "Load audio track for video from YouTube"),
+    ('video', "Load short video from YouTube"),
     ('image', "Image processing"),
     ('help', "Show help")
 )

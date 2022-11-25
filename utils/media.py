@@ -47,5 +47,20 @@ class Audio(Media):
 
 class Video(Media):
 
-    def __init__(self, url: str) -> None:
-        super().__init__(url)
+    def __init__(self, url: str, path: str, uid: int) -> None:
+        super().__init__(url, path, uid)
+
+    def get(self) -> str:
+        yt = YouTube(self.url, on_complete_callback=on_complete, on_progress_callback=on_progress)
+        yt.t
+        print("Loading {0}...".format(yt.title))
+        filters = yt.streams.filter(progressive=True, file_extension='mp4')
+
+        filters.get_highest_resolution().download(self.abs_path)
+        print('Video Downloaded Successfully')
+
+
+        audio_streams = yt.streams.get_audio_only()
+
+        audio_streams.download(self.abs_path, "audio-{0}.mp4".format(self.uid))
+        return self.save(audio_streams.default_filename)

@@ -19,6 +19,7 @@ def get_abs_path(path: str) -> str:
         os.mkdir(abs_path)
     return abs_path
 
+
 def is_url_valid(url: str) -> bool:
     try:
         urlopen(url)
