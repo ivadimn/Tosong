@@ -10,10 +10,12 @@ from keyboards import kb_commands, kb_yes_no
 from states.bot_states import BotState
 from utils.media import Video
 
-@dp.message_handler(commands=["audio"], state="*")
-async def audio(message: types.Message, state: FSMContext):
+
+@dp.message_handler(commands=["video"], state="*")
+async def video(message: types.Message, state: FSMContext):
     locale = message.from_user.language_code.lower()
-    msg = msgs[locale].AUDIO_MODE
+    msg = msgs[locale].VIDEO_MODE
     await state.update_data(locale=locale, id=message.chat.id)
     await BotState.url_audio.set()
     await bot.send_message(message.chat.id, msg, reply_markup=ReplyKeyboardRemove())
+
